@@ -12,6 +12,8 @@ import smtplib
 from email.message import EmailMessage
 from openpyxl import Workbook, load_workbook
 from openpyxl.utils import get_column_letter
+from googleapiclient.http import MediaFileUpload
+
 
 
 
@@ -32,6 +34,10 @@ CALENDAR_ID = os.getenv("SMTP_USER")
 
 # [source: 133] Garante que a pasta de uploads existe
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+#planilia
+SPREADSHEET_ID = '1ZJialljGqAKSeNqm95eeOZLKfYCGzFvMVQ1tCsrnkpE'
+RANGE_NAME = 'Página1!A1'  # ou o nome da aba real
+
 
 @app.route('/', methods=['GET', 'POST'])
 def agendamento():
@@ -103,8 +109,23 @@ def agendamento():
                     descricao += "Roteiro: Nenhum arquivo enviado.\n"
             else:
                  descricao += "Roteiro: Não incluído no formulário.\n"
+            
+                        # Upload para Google Drive
+            drive_service = build('drive', 'v3', credentials=credentials)
+            
+            arquivo_drive = MediaFileUpload(caminho, resumable=True)
+            arquivo_metadata = {
+                'name': filename,
+                'parents': ['1yYwKdBiA2AIZ19LEcUU4HxfJkM0OKBZK'],  # ID da pasta "Roteiros"
+            }
+            
+            drive_service.files().create(
+                body=arquivo_metadata,
+                media_body=arquivo_drive,
+                fields='id'
+            ).execute()
 
-
+            
             # --- Criar evento no Google Calendar ---
             # [source: 136-137] Autenticação e serviço
             credentials = service_account.Credentials.from_service_account_file(
@@ -143,45 +164,32 @@ def agendamento():
                 # },
             }
 
-            # [source: 140] Inserir evento
+            #Inserir evento
             criado = service.events().insert(calendarId=CALENDAR_ID,
                                              body=evento,
                                              sendNotifications=False # Enviar convite para o email do professor
                                              ).execute()
 
-            arquivo_excel = 'agendamentos.xlsx'
-
-            # Se já existe, carregamos. Se não, criamos.
-            if os.path.exists(arquivo_excel):
-                wb = load_workbook(arquivo_excel)
-                ws = wb.active
-            else:
-                wb = Workbook()
-                ws = wb.active
-                # Cabeçalho na primeira linha
-                ws.append([
-                    'Data de envio', 'Nome', 'Email', 'Disciplina', 'Turma', 'Assunto',
-                    'Data da aula', 'Início', 'Fim', 'Descrição', 'Link do Evento'
-                ])
-
-            # Dados do agendamento
-            linha = [
+            #Planilia 
+            
+            service_sheets = build('sheets', 'v4', credentials=credentials)
+            sheet = service_sheets.spreadsheets()
+            
+            valores = [[
                 datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                 nome, email, disciplina, turma, assunto, data, inicio, fim,
                 descricao.replace('\n', ' '),
                 criado.get("htmlLink")
-            ]
+            ]]
+            
+            sheet.values().append(
+                spreadsheetId=SPREADSHEET_ID,
+                range=RANGE_NAME,
+                valueInputOption='RAW',
+                insertDataOption='INSERT_ROWS',
+                body={'values': valores}
+            ).execute()
 
-            # Adiciona à próxima linha da planilha
-            ws.append(linha)
-
-            # Auto-ajustar largura das colunas (opcional)
-            for i, coluna in enumerate(linha, 1):
-                col_letter = get_column_letter(i)
-                ws.column_dimensions[col_letter].width = max(len(str(coluna)) + 2, 15)
-
-            # Salvar
-            wb.save(arquivo_excel)            
                                                     
                             #ENVIAR EMAIL DE CONFIRMAÇÃO
 
