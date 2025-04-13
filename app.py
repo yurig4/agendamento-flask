@@ -28,7 +28,7 @@ app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5MB Permitido
 # [source: 133] Credenciais e Calendar ID (Confirmado pelo usuário)
 SERVICE_ACCOUNT_FILE = 'credenciais.json'
 SCOPES = ['https://www.googleapis.com/auth/calendar']
-CALENDAR_ID = 'yurig4@gmail.com'
+CALENDAR_ID = os.getenv("SMTP_USER")
 
 # [source: 133] Garante que a pasta de uploads existe
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -215,7 +215,7 @@ def agendamento():
 
                 try:
                     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-                        smtp.login('yurig4@gmail.com', '')  # <-- substitua
+                        smtp.login(os.getenv("SMTP_USER"), os.getenv("SMTP_PASS"))  # <-- substitua
                         smtp.send_message(msg)
                     print('E-mail enviado com sucesso.')
                 except Exception as e:
