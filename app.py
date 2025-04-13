@@ -269,7 +269,8 @@ def uploaded_file(filename):
         return "Arquivo não encontrado", 404
 
 
+
 if __name__ == '__main__':
-    # [source: 141] Executar app
-    # Mude host='0.0.0.0' se quiser acessar de outros dispositivos na mesma rede
-    app.run(debug=True, host='127.0.0.1', port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
+
