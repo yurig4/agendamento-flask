@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Aulas Práticas</title>
+    <style>
+        /* [source: 1-45] Seu CSS original permanece o mesmo */
+        :root {
+            --primary-color: #4285f4;
+            --primary-hover: #3367d6;
+            --secondary-color: #f8f9fa;
+            --text-color: #333;
+            --border-color: #e0e0e0;
+            --success-color: #0f9d58;
+            --error-color: #db4437;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            font-family: var(--font-family);
+            background-color: #f5f7fa;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 650px;
+            padding: 0;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 16px 16px 0 0;
+        }
+        .header h2 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 500;
+        }
+        .form-container {
+            padding: 30px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .form-column {
+            flex: 1;
+            min-width: 0;
+        }
+        label {
+            font-weight: 500;
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: var(--font-family);
+            font-size: 15px;
+            transition: border 0.3s ease, box-shadow 0.3s ease;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+        }
+        .section-title {
+            font-size: 18px;
+            color: var(--primary-color);
+            margin: 30px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        .checkbox-container {
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 8px;
+        }
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+        .checkbox-item input {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            accent-color: var(--primary-color);
+        }
+        .checkbox-item label {
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        .file-input-container {
+            position: relative;
+            margin-top: 10px; /* Ajuste pequeno */
+        }
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--secondary-color);
+            border: 2px dashed var(--primary-color);
+            border-radius: 8px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .file-input-label:hover {
+            background-color: rgba(66, 133, 244, 0.1);
+        }
+        .file-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .file-input-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .file-input-icon {
+            font-size: 36px;
+            color: var(--primary-color);
+        }
+        .file-input-text { /* Adicionado para exibir nome do arquivo */
+            font-size: 16px;
+            text-align: center;
+            color: var(--text-color);
+            max-width: 90%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .file-input-help {
+            font-size: 14px;
+            color: #777;
+            text-align: center;
+        }
+        .number-input {
+            width: 100%;
+        }
+        button {
+            width: 100%;
+            background: var(--primary-color);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            margin-top: 25px; /* Aumentado espaço antes do botão */
+        }
+        button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .date-note {
+            font-size: 13px;
+            color: #777;
+            margin-top: 8px;
+        }
+        .alert {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+            border-left: 4px solid #ffeeba;
+            font-weight: 500;
+        }
+        .calendar-container {
+            margin-top: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: none; /* Inicialmente oculto */
+            max-width: 100%;
+            height: 400px;
+        }
+        .calendar-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        /* [source: 50-52] Media query permanece a mesma */
+        @media (max-width: 600px) {
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                flex-direction: column;
+                gap: 0; /* Remove gap when stacked */
+                margin-bottom: 0; /* Reset margin */
+            }
+            .form-row .form-column {
+                margin-bottom: 25px; /* Add margin back to columns */
+            }
+            .calendar-container {
+                height: 300px;
+            }
+        }
+        /* Estilo para mensagens de feedback */
+        .feedback-message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: none; /* Oculto por padrão */
+        }
+        .feedback-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .feedback-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Registro de Aulas Práticas</h2>
+        </div>
+        <div class="form-container">
+            <div id="feedbackArea" class="feedback-message"></div>
+
+            <form id="aulasPraticasForm" method="POST" action="/" enctype="multipart/form-data">
+                <div class="section-title">Dados do Solicitante</div>
+
+                <div class="form-group">
+                    <label for="nomeProfessor">Nome do Professor:</label>
+                    <input type="text" id="nomeProfessor" name="nomeProfessor" required>
+                </div>
+                <div class="form-group">
+                    <label for="emailProfessor">Email:</label>
+                    <input type="email" id="emailProfessor" name="emailProfessor" required>
+                </div>
+
+                <div class="section-title">Informações da Disciplina</div>
+                <div class="form-group">
+                    <label for="disciplina">Nome da Disciplina:</label>
+                    <input type="text" id="disciplina" name="disciplina" required>
+                </div>
+                <div class="form-group">
+                    <label for="turma">Turma:</label>
+                    <input type="text" id="turma" name="turma" required>
+                </div>
+                <div class="form-group">
+                    <label for="assunto">Assunto da Aula:</label>
+                    <input type="text" id="assunto" name="assunto" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="data">Data da Aula:</label>
+                    <input type="date" id="data" name="data" required>
+                    <div class="alert">O prazo mínimo para agendamento é de 48 horas.</div>
+                    <div id="calendarContainer" class="calendar-container">
+                        <div class="section-title" style="margin-top: 15px;">Agenda da Data Selecionada</div>
+                        <iframe id="calendarIframe" class="calendar-iframe" scrolling="no"></iframe>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-column">
+                        <label for="horarioInicio">Horário de Início:</label>
+                        <input type="time" id="horarioInicio" name="horarioInicio" required>
+                    </div>
+                    <div class="form-column">
+                        <label for="horarioFim">Horário de Término:</label>
+                        <input type="time" id="horarioFim" name="horarioFim" required onchange="if(this.value < document.getElementById('horarioInicio').value){alert('O horário de término não pode ser anterior ao horário de início!'); this.value='';}">
+                    </div>
+                </div>
+
+                <div class="section-title">Organização da Aula</div>
+                <div class="form-row">
+                    <div class="form-column">
+                        <label for="numAlunos">Número de Alunos:</label>
+                        <input type="number" id="numAlunos" name="numAlunos" min="1" class="number-input" required>
+                    </div>
+                    <div class="form-column">
+                        <label for="numGrupos">Número de Grupos:</label>
+                        <input type="number" id="numGrupos" name="numGrupos" min="1" class="number-input" required>
+                    </div>
+                </div>
+
+                <div class="section-title">Laboratório</div>
+                <div class="form-group">
+                    <label>Laboratório que será realizada a aula:</label>
+                    <div class="checkbox-container">
+                        <div class="checkbox-group">
+                            <div class="checkbox-item"><input type="checkbox" id="lab1" name="laboratorio" value="Didático"><label for="lab1">Didático</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="lab2" name="laboratorio" value="Agronomia"><label for="lab2">Agronomia</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="lab3" name="laboratorio" value="Alimentos - Animal"><label for="lab3">Alimentos - Animal</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="lab4" name="laboratorio" value="Alimentos - Vegetal"><label for="lab4">Alimentos - Vegetal</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="lab5" name="laboratorio" value="Analítica"><label for="lab5">Analítica</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="lab6" name="laboratorio" value="Biologia / Microbiologia"><label for="lab6">Biologia / Microbiologia</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="lab7" name="laboratorio" value="Bioquímica / Orgânica"><label for="lab7">Bioquímica / Orgânica</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="lab8" name="laboratorio" value="Central (equipamentos)"><label for="lab8">Central (equipamentos)</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="lab9" name="laboratorio" value="Sala de análise sensorial"><label for="lab9">Sala de análise sensorial</label></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title">Materiais Necessários</div>
+                <div class="form-group">
+                    <label for="vidrariasGrupo">Vidrarias por Grupo:</label>
+                    <textarea id="vidrariasGrupo" name="vidrariasGrupo" rows="4" placeholder="Liste as vidrarias necessárias para cada grupo (ex: 3 béqueres de 100mL, 2 provetas de 50mL, etc.)" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="vidrariasComuns">Vidrarias de Uso Comum:</label>
+                    <textarea id="vidrariasComuns" name="vidrariasComuns" rows="4" placeholder="Liste as vidrarias de uso comum (ex: 3 béqueres de 100mL, 2 provetas de 50mL, etc.)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="solucoes">Soluções a Preparar:</label>
+                    <textarea id="solucoes" name="solucoes" rows="4" placeholder="Liste as soluções que precisam ser preparadas (ex: 500mL de NaOH 0,1M, 250mL de H2SO4 0,5M, etc.)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="reagentes">Reagentes Necessários:</label>
+                    <textarea id="reagentes" name="reagentes" rows="4" placeholder="Liste os reagentes necessários para a aula (ex: 100g de cloreto de sódio, 50mL de ácido acético, etc.)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="equipamentos">Equipamentos Necessários:</label>
+                    <textarea id="equipamentos" name="equipamentos" rows="4" placeholder="Liste os equipamentos necessários para a aula (ex: 2 microscópios, 1 centrífuga, balança analítica, etc.)"></textarea>
+                </div>
+
+                <div class="section-title">Roteiro da Aula</div>
+                <div class="form-group">
+                    <label for="roteiro">Faça upload do roteiro da aula:</label>
+                    <div class="file-input-container">
+                        <label for="roteiro" class="file-input-label">
+                            <div class="file-input-content">
+                                <div class="file-input-icon">📄</div>
+                                <span class="file-input-text" id="fileNameDisplay">Clique para fazer upload do roteiro</span>
+                                <div class="file-input-help">Formatos aceitos: PDF, DOC, DOCX (máx. 5MB)</div>
+                            </div>
+                        </label>
+                        <input type="file" id="roteiro" name="roteiro" class="file-input" accept=".pdf,.doc,.docx">
+                    </div>
+                </div>
+
+                <div class="section-title">Observações Adicionais</div>
+                <div class="form-group">
+                    <label for="observacoes">Observações:</label>
+                    <textarea id="observacoes" name="observacoes" rows="5" placeholder="Informações adicionais..."></textarea>
+                </div>
+
+                <button type="submit">Enviar Registro</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('aulasPraticasForm');
+        const btnSubmit = form.querySelector('button[type="submit"]');
+        const btnTextoOriginal = btnSubmit.innerHTML;
+        const feedbackArea = document.getElementById('feedbackArea');
+        const fileInput = document.getElementById('roteiro');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        const originalFileInputText = fileNameDisplay.textContent; // Guardar texto original
+
+        // --- FUNÇÃO PARA MOSTRAR FEEDBACK ---
+        function showFeedback(message, type = 'error') {
+            feedbackArea.textContent = message;
+            feedbackArea.className = `feedback-message feedback-${type}`; // Define a classe correta
+            feedbackArea.style.display = 'block'; // Mostra a área
+             // Scroll para a mensagem de feedback para que o usuário veja
+            feedbackArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // --- FUNÇÃO PARA LIMPAR FEEDBACK ---
+        function clearFeedback() {
+            feedbackArea.textContent = '';
+            feedbackArea.style.display = 'none';
+        }
+
+        // --- ENVIO DO FORMULÁRIO (ADAPTADO PARA FLASK E FormData) ---
+        form.addEventListener('submit', function(e) {
+          e.preventDefault(); // Impedir o envio padrão para usar Fetch API
+          clearFeedback(); // Limpar feedback anterior
+
+          // [source: 96] Validações básicas (mantidas)
+          const laboratoriosSelecionados = form.querySelectorAll('input[name="laboratorio"]:checked').length;
+          if (laboratoriosSelecionados === 0) {
+            showFeedback('Por favor, selecione pelo menos um laboratório.');
+            return;
+          }
+
+          // [source: 97-100] Verificar prazo mínimo da data (mantido)
+          const dataSelecionada = new Date(document.getElementById('data').value + 'T00:00:00'); // Adiciona hora para evitar problemas de fuso local
+          const dataAtual = new Date();
+          const prazoMinimo = new Date(dataAtual);
+          prazoMinimo.setDate(dataAtual.getDate() + 2); // +2 dias (48h)
+          prazoMinimo.setHours(0, 0, 0, 0); // Zera a hora para comparar só a data
+
+          if (dataSelecionada < prazoMinimo) {
+            showFeedback('O prazo mínimo para agendamento é de 48 horas.');
+            return;
+          }
+
+          // [source: 101] Mostrar estado de carregamento no botão
+          btnSubmit.innerHTML = 'Enviando...';
+          btnSubmit.disabled = true;
+
+          // *** MODIFICAÇÃO AQUI ***: Usar FormData para incluir o arquivo
+          const formData = new FormData(form);
+
+          // *** MODIFICAÇÃO AQUI ***: Fetch para o endpoint do Flask ('/')
+          fetch('/', { // URL é a rota do Flask
+            method: 'POST',
+            body: formData // Envia o FormData (NÃO usar headers com Content-Type aqui)
+          })
+          .then(response => {
+              // Verificar se a resposta da rede foi ok (status 2xx)
+              if (!response.ok) {
+                  // Se não foi ok, tentar ler o erro como JSON, senão gerar erro genérico
+                  return response.json().catch(() => {
+                      throw new Error(`Erro ${response.status}: ${response.statusText}`);
+                  }).then(errorData => {
+                      // Lança um erro com a mensagem vinda do servidor, se houver
+                      throw new Error(errorData.message || `Erro ${response.status}`);
+                  });
+              }
+              return response.json(); // Processar a resposta JSON do Flask
+          })
+          .then(data => {
+            // [source: 103-106] Processar resposta do Flask
+            if (data.success) {
+              showFeedback(data.message, 'success'); // Mostrar mensagem de sucesso
+              form.reset(); // Limpar formulário
+              fileNameDisplay.textContent = originalFileInputText; // Restaurar texto do input file
+              document.getElementById('calendarContainer').style.display = 'none'; // Ocultar calendário
+            } else {
+              // Mostrar mensagem de erro vinda do Flask
+              showFeedback(data.message || 'Ocorreu um erro desconhecido no servidor.');
+            }
+          })
+          .catch(error => {
+            // [source: 106-107] Tratar erros de rede ou erros lançados no .then()
+            console.error('Erro no fetch:', error);
+            showFeedback(`Erro ao enviar: ${error.message}`);
+          })
+          .finally(() => {
+            // [source: 105, 107] Restaurar botão (sempre executa)
+            btnSubmit.innerHTML = btnTextoOriginal;
+            btnSubmit.disabled = false;
+          });
+        });
+
+        // --- ATUALIZAÇÃO DO CALENDÁRIO (QUASE IGUAL, SÓ AJUSTE NO EMAIL) ---
+        // [source: 108-111] Listener de mudança da data (validação mantida)
+        document.getElementById('data').addEventListener('change', function() {
+          clearFeedback(); // Limpar feedback ao mudar data
+          const dataConsulta = this.value;
+          const calendarContainer = document.getElementById('calendarContainer');
+
+          if (!dataConsulta) {
+            calendarContainer.style.display = 'none';
+            return;
+          }
+
+          const dataSelecionada = new Date(dataConsulta + 'T00:00:00');
+          const dataAtual = new Date();
+          const prazoMinimo = new Date(dataAtual);
+          prazoMinimo.setDate(dataAtual.getDate() + 2);
+          prazoMinimo.setHours(0, 0, 0, 0);
+
+          if (dataSelecionada < prazoMinimo) {
+            showFeedback('O prazo mínimo para agendamento é de 48 horas.');
+            this.value = '';
+            calendarContainer.style.display = 'none';
+            return;
+          }
+
+          // [source: 114-121] Atualizar e mostrar o iframe do calendário
+          atualizarCalendario(dataConsulta);
+
+          // [source: 112-113] REMOVIDO: Fetch para o antigo Apps Script de verificação de disponibilidade.
+          // Se precisar verificar disponibilidade, crie um endpoint no Flask para isso.
+        });
+
+        // [source: 114-121] Função para atualizar o iframe (AJUSTE NO EMAIL)
+        function atualizarCalendario(data) {
+          const calendarContainer = document.getElementById('calendarContainer');
+          const calendarIframe = document.getElementById('calendarIframe');
+
+          // [source: 115-117] Formatar data (corrigido `getDate() + 1` para `getDate()`)
+          const dataObj = new Date(data + 'T00:00:00'); // Adiciona hora para evitar problemas de fuso
+          const ano = dataObj.getFullYear();
+          const mes = String(dataObj.getMonth() + 1).padStart(2, '0'); // Mês é 0-indexado
+          const dia = String(dataObj.getDate()).padStart(2, '0'); // Dia não precisa de +1
+          const dataFormatada = `${ano}${mes}${dia}`;
+
+          // *** MODIFICAÇÃO AQUI ***: Usar o email da agenda do Flask (yurig4@gmail.com)
+          // Certifique-se que esta agenda está pública ou compartilhada para ser visível no embed
+          const calendarUserEmail = 'yurig4@gmail.com'; // O email da agenda que você quer mostrar
+          const calendarUrl = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(calendarUserEmail)}&ctz=America%2FSao_Paulo&mode=AGENDA&dates=${dataFormatada}/${dataFormatada}`;
+
+          // [source: 118-120] Atualizar iframe e mostrar
+          calendarIframe.src = calendarUrl;
+          calendarContainer.style.display = 'block';
+          setTimeout(() => {
+            calendarContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 100);
+        }
+
+        // --- ATUALIZAR NOME DO ARQUIVO NO DISPLAY ---
+        // [source: 121] Listener para mudança no input de arquivo
+        fileInput.addEventListener('change', function() {
+            if (fileInput.files.length > 0) {
+                // [source: 127] Mostra o nome do arquivo selecionado
+                fileNameDisplay.textContent = fileInput.files[0].name;
+            } else {
+                // [source: 127] Volta ao texto original se nenhum arquivo for selecionado
+                fileNameDisplay.textContent = originalFileInputText;
+            }
+        });
+
+        // [source: 121-132] REMOVIDO: Código antigo e duplicado de upload e formulário ('uploadForm', 'meuFormulario').
+        // A lógica de envio foi integrada no listener de submit de 'aulasPraticasForm'.
+
+    </script>
+</body>
+</html>
