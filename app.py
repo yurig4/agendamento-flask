@@ -111,6 +111,8 @@ def agendamento():
                  descricao += "Roteiro: Não incluído no formulário.\n"
             
                         # Upload para Google Drive
+            credentials = service_account.Credentials.from_service_account_file(
+                SERVICE_ACCOUNT_FILE, scopes=SCOPES)
             drive_service = build('drive', 'v3', credentials=credentials)
             
             arquivo_drive = MediaFileUpload(caminho, resumable=True)
@@ -128,8 +130,7 @@ def agendamento():
             
             # --- Criar evento no Google Calendar ---
             # [source: 136-137] Autenticação e serviço
-            credentials = service_account.Credentials.from_service_account_file(
-                SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+            
             service = build('calendar', 'v3', credentials=credentials)
 
             # [source: 138-139] Montar horário no formato ISO 8601 com Timezone
