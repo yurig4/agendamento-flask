@@ -29,7 +29,11 @@ app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5MB Permitido
 
 # [source: 133] Credenciais e Calendar ID (Confirmado pelo usuário)
 SERVICE_ACCOUNT_FILE = 'credenciais.json'
-SCOPES = ['https://www.googleapis.com/auth/calendar']
+SCOPES = [
+    'https://www.googleapis.com/auth/calendar',
+    'https://www.googleapis.com/auth/spreadsheets',
+    'https://www.googleapis.com/auth/drive.file'
+]
 CALENDAR_ID = os.getenv("SMTP_USER")
 
 # [source: 133] Garante que a pasta de uploads existe
@@ -130,7 +134,8 @@ def agendamento():
             
             # --- Criar evento no Google Calendar ---
             # [source: 136-137] Autenticação e serviço
-            
+            credentials = service_account.Credentials.from_service_account_file(
+                SERVICE_ACCOUNT_FILE, scopes=SCOPES)
             service = build('calendar', 'v3', credentials=credentials)
 
             # [source: 138-139] Montar horário no formato ISO 8601 com Timezone
