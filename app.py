@@ -115,7 +115,7 @@ def agendamento():
                 SERVICE_ACCOUNT_FILE, scopes=SCOPES)
             drive_service = build('drive', 'v3', credentials=credentials)
             
-            arquivo_drive = MediaFileUpload(caminho, resumable=True)
+            arquivo_drive = MediaFileUpload(caminho_arquivo_salvo, resumable=True)
             arquivo_metadata = {
                 'name': filename,
                 'parents': ['1yYwKdBiA2AIZ19LEcUU4HxfJkM0OKBZK'],  # ID da pasta "Roteiros"
